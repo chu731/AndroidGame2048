@@ -31,32 +31,25 @@ class MainActivity : AppCompatActivity() {
 
         mediaPlayer = MediaPlayer.create(this, R.raw.merge_sound)
 
-        // 設定 Toolbar 為 ActionBar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        // 設定 Toolbar 的 NavigationIcon
         toolbar.setNavigationIcon(R.drawable.menu)
         toolbar.setNavigationOnClickListener {
             showGameOptionsDialog()
         }
 
-        // 移除 ActionBar 中的標題
         supportActionBar?.setDisplayShowTitleEnabled(false)
 
-        // 確保 Toolbar 不顯示標題
         toolbar.title = ""
 
-        // 移除顏色設定，讓背景顏色為透明
         toolbar.setBackgroundColor(Color.TRANSPARENT)
 
-        // 初始化 UI 元件
         boardGridLayout = findViewById(R.id.boardGridLayout)
         scoreTextView = findViewById(R.id.scoreTextView)
         bestScoreTextView = findViewById(R.id.bestScoreTextView)
         game = Game2048()
 
-        // 初始化移動偵測
         gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
             override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
                 val diffX = e2.x - (e1?.x ?: 0f)
@@ -79,7 +72,6 @@ class MainActivity : AppCompatActivity() {
         return event?.let { gestureDetector.onTouchEvent(it) } == true || super.onTouchEvent(event)
     }
 
-    // menu
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
@@ -88,7 +80,6 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_menu -> {
-                // 測試點擊menu
                 Log.d("Menu", "Menu button clicked!")
                 showGameOptionsDialog()
                 true
@@ -96,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-    // 顯示menu對話框
+
     private fun showGameOptionsDialog() {
         val options = arrayOf("繼續遊戲", "重新開始", "退出遊戲")
 
@@ -104,23 +95,20 @@ class MainActivity : AppCompatActivity() {
         builder.setTitle("選項")
         builder.setItems(options) { dialog: DialogInterface, which: Int ->
             when (which) {
-                0 -> continueGame() // 繼續遊戲
-                1 -> restartGame() // 重新開始
-                2 -> exitGame() // 退出遊戲
+                0 -> continueGame()
+                1 -> restartGame()
+                2 -> exitGame() 
             }
         }
         builder.show()
     }
 
-    // 繼續遊戲
     private fun continueGame() {
     }
-    // 重新開始遊戲
     private fun restartGame() {
         game.resetGame()
         updateUI()
     }
-    // 退出遊戲
     private fun exitGame() {
         finish()
     }
@@ -156,23 +144,19 @@ class MainActivity : AppCompatActivity() {
                 boardGridLayout.addView(cardView)
             }
         }
-        // 只有在合併發生時才播放音效
+        // 
         if (game.mergeOccurred) {
-            // 停止音效
             if (mediaPlayer.isPlaying) {
                 mediaPlayer.stop()
-                mediaPlayer.prepare()  // 重新準備音效
+                mediaPlayer.prepare() 
             }
-            // 播放音效
             mediaPlayer.start()
         }
-        // 檢查是否遊戲結束
         if (game.isGameOver()) {
-            // 顯示遊戲結束的對話框
             showGameOverDialog()
         }
     }
-    // 顯示遊戲結束對話框
+
     private fun showGameOverDialog() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("遊戲結束")
