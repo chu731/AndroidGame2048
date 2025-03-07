@@ -1,0 +1,10 @@
+<!-- res/drawable/score_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#BBADA0" />  <!-- 設定背景顏色 -->
+    <corners android:radius="10dp" />  <!-- 設定圓角 -->
+    <padding
+        android:left="8dp"
+        android:top="8dp"
+        android:right="8dp"
+        android:bottom="8dp" />  <!-- 可選，設定內邊距 -->
+</shape>

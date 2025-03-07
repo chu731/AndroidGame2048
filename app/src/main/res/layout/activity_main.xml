@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#ded3b6"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text=""
+        android:textSize="16sp" />
+
+    <!-- 分數和標題並排顯示 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="1dp"
+        android:gravity="center_horizontal"
+        >
+
+        <!-- 主要遊戲標題區塊 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="100dp"
+            android:background="@drawable/titlesnape"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="2048"
+            android:textColor="#776E65"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <!-- 分數區塊 -->
+        <LinearLayout
+            android:id="@+id/scoreLayout"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/snape"
+            android:padding="8dp"
+            android:layout_marginEnd="30dp"
+            >
+
+            <!-- 目前分數區塊 -->
+            <TextView
+                android:id="@+id/scoreLabel"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="Score"
+                android:textColor="#EEE4DA"
+                android:textSize="22sp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/scoreTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- 最高分數區塊 -->
+        <LinearLayout
+            android:id="@+id/bestScoreLayout"
+            android:layout_width="150dp"
+            android:layout_height="80dp"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@drawable/snape"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/bestScoreLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Best"
+                android:textColor="#EEE4DA"
+                android:textSize="22sp"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/bestScoreTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="#FFFFFF"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 遊戲介紹文字和工具列並排顯示 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_marginBottom="16dp">
+
+    <!-- 工具列區域 -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="210dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="0dp"
+        android:background="?attr/colorPrimary"
+        android:elevation="0dp"
+        android:padding="0dp"
+        android:title="" />
+
+    <!-- 遊戲介紹文字 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="Join the numbers and get to the 2048 tile!"
+        android:textSize="19sp" />
+    </LinearLayout>
+
+    <!-- 遊戲面板 -->
+    <GridLayout
+        android:id="@+id/boardGridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="4"
+        android:rowCount="4"
+        android:background="@drawable/boardsnape"
+        android:padding="8dp" />
+</LinearLayout>

@@ -1,0 +1,13 @@
+<resources>
+    <!-- 基本應用程式主題樣式 -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- 設定menu按鈕的背景顏色 -->
+    <style name="MenuButtonStyle">
+        <item name="android:background">@color/menu_button_color</item>
+    </style>
+</resources>
