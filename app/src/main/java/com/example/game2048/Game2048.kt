@@ -2,7 +2,7 @@ class Game2048 {
     var board = Array(4) { IntArray(4) }
     var score = 0
     var bestScore = 0
-    var mergeOccurred = false  // 記錄是否有合併
+    var mergeOccurred = false
 
     init {
         resetGame()
@@ -13,12 +13,12 @@ class Game2048 {
         score = 0
         addRandomTile()
         addRandomTile()
-        mergeOccurred = false  // 重置合併狀態
+        mergeOccurred = false
     }
 
     fun move(direction: String): Boolean {
         val oldBoard = board.map { it.clone() }.toTypedArray()
-        mergeOccurred = false  // 每次移動前都重置 mergeOccurred
+        mergeOccurred = false
 
         when (direction) {
             "left" -> moveLeft()
@@ -34,28 +34,24 @@ class Game2048 {
             if (score > bestScore) bestScore = score
         }
 
-        // 檢查遊戲是否結束
         return hasChanged
     }
 
-    // 檢查遊戲是否結束
     fun isGameOver(): Boolean {
-        // 檢查是否有空位
         for (i in 0 until 4) {
             for (j in 0 until 4) {
-                if (board[i][j] == 0) return false  // 有空位，遊戲未結束
+                if (board[i][j] == 0) return false 
             }
         }
 
-        // 檢查是否有相鄰的數字相同
         for (i in 0 until 4) {
             for (j in 0 until 4) {
-                if (i < 3 && board[i][j] == board[i + 1][j]) return false  // 橫向合併
-                if (j < 3 && board[i][j] == board[i][j + 1]) return false  // 縱向合併
+                if (i < 3 && board[i][j] == board[i + 1][j]) return false 
+                if (j < 3 && board[i][j] == board[i][j + 1]) return false
             }
         }
 
-        return true  // 沒有空位，也沒有相鄰的相同數字，遊戲結束
+        return true
     }
 
     private fun moveLeft() {
@@ -102,7 +98,7 @@ class Game2048 {
                 newList.add(row[i] * 2)
                 score += row[i] * 2
                 skip = true
-                mergeOccurred = true  // 發生合併
+                mergeOccurred = true
             } else {
                 newList.add(row[i])
             }
@@ -122,7 +118,7 @@ class Game2048 {
                 newList.add(0, row[i] * 2)
                 score += row[i] * 2
                 skip = true
-                mergeOccurred = true  // 發生合併
+                mergeOccurred = true
             } else {
                 newList.add(0, row[i])
             }
