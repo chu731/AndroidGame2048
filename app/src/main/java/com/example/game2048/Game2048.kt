@@ -3,19 +3,17 @@ class Game2048 {
     var score = 0
     var bestScore = 0
     var mergeOccurred = false
-    private var previousStates = mutableListOf<GameState>() // 儲存先前的遊戲狀態
+    private var previousStates = mutableListOf<GameState>()
 
-
-    // 檢查是否達到2048
     fun checkFor2048(): Boolean {
         for (i in 0 until 4) {
             for (j in 0 until 4) {
                 if (board[i][j] == 2048) {
-                    return true  // 如果板上有2048，則返回true
+                    return true
                 }
             }
         }
-        return false  // 如果沒有2048，則返回false
+        return false
     }
 
     init {
@@ -28,11 +26,10 @@ class Game2048 {
         addRandomTile()
         addRandomTile()
         mergeOccurred = false
-        previousStates.clear() // 清空上一步記錄
+        previousStates.clear()
     }
 
     fun move(direction: String): Boolean {
-        // 儲存當前遊戲狀態
         saveState()
 
         val oldBoard = board.map { it.clone() }.toTypedArray()
@@ -55,15 +52,13 @@ class Game2048 {
         return hasChanged
     }
 
-    // 儲存當前遊戲狀態
     private fun saveState() {
         previousStates.add(GameState(board.map { it.clone() }.toTypedArray(), score, mergeOccurred))
         if (previousStates.size > 10) {
-            previousStates.removeAt(0) // 保持最多10個狀態記錄
+            previousStates.removeAt(0) 
         }
     }
 
-    // 還原至上一步的遊戲狀態
     fun undo(): Boolean {
         if (previousStates.isNotEmpty()) {
             val previousState = previousStates.removeAt(previousStates.size - 1)
@@ -75,10 +70,9 @@ class Game2048 {
         return false
     }
 
-    // 在 Game2048 類別內部添加這個方法
     fun copy(): Game2048 {
         val newGame = Game2048()
-        newGame.board = this.board.map { it.clone() }.toTypedArray()  // 複製棋盤
+        newGame.board = this.board.map { it.clone() }.toTypedArray()
         newGame.score = this.score
         newGame.bestScore = this.bestScore
         return newGame
@@ -186,6 +180,5 @@ class Game2048 {
         }
     }
 
-    // 用來儲存遊戲狀態的資料類別
     data class GameState(val board: Array<IntArray>, val score: Int, val mergeOccurred: Boolean)
 }
