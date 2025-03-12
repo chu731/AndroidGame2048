@@ -1,37 +1,30 @@
 <resources>
-    <!-- 基本應用程式主題樣式 -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- 設定menu按鈕的背景顏色 -->
     <style name="ButtonStyle">
-        <item name="android:background">@drawable/buttonbackground</item> <!-- 設置背景 -->
-        <item name="android:textColor">#FFFFFF</item> <!-- 白色文字 -->
-        <item name="android:textSize">16sp</item> <!-- 文字大小 -->
-        <item name="android:paddingLeft">16dp</item> <!-- 左邊距 -->
-        <item name="android:paddingRight">16dp</item> <!-- 右邊距 -->
-        <item name="android:paddingTop">10dp</item> <!-- 上邊距 -->
-        <item name="android:paddingBottom">10dp</item> <!-- 下邊距 -->
-        <item name="android:elevation">4dp</item> <!-- 按鈕陰影 -->
+        <item name="android:background">@drawable/buttonbackground</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:paddingLeft">16dp</item> 
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:elevation">4dp</item>
     </style>
 
 
-
-        <!-- Light Theme -->
         <style name="LightTheme" parent="Theme.AppCompat.Light">
             <item name="android:windowBackground">@color/white</item>
             <item name="android:textColor">@color/black</item>
-            <!-- More customizations -->
         </style>
 
-        <!-- Dark Theme -->
         <style name="DarkTheme" parent="Theme.AppCompat.DayNight">
             <item name="android:windowBackground">@color/black</item>
             <item name="android:textColor">@color/white</item>
-            <!-- More customizations -->
         </style>
 
 
