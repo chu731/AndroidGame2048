@@ -3,6 +3,20 @@ class Game2048 {
     var score = 0
     var bestScore = 0
     var mergeOccurred = false
+    private var previousStates = mutableListOf<GameState>() // 儲存先前的遊戲狀態
+
+
+    // 檢查是否達到2048
+    fun checkFor2048(): Boolean {
+        for (i in 0 until 4) {
+            for (j in 0 until 4) {
+                if (board[i][j] == 2048) {
+                    return true  // 如果板上有2048，則返回true
+                }
+            }
+        }
+        return false  // 如果沒有2048，則返回false
+    }
 
     init {
         resetGame()
@@ -14,9 +28,13 @@ class Game2048 {
         addRandomTile()
         addRandomTile()
         mergeOccurred = false
+        previousStates.clear() // 清空上一步記錄
     }
 
     fun move(direction: String): Boolean {
+        // 儲存當前遊戲狀態
+        saveState()
+
         val oldBoard = board.map { it.clone() }.toTypedArray()
         mergeOccurred = false
 
@@ -37,16 +55,45 @@ class Game2048 {
         return hasChanged
     }
 
+    // 儲存當前遊戲狀態
+    private fun saveState() {
+        previousStates.add(GameState(board.map { it.clone() }.toTypedArray(), score, mergeOccurred))
+        if (previousStates.size > 10) {
+            previousStates.removeAt(0) // 保持最多10個狀態記錄
+        }
+    }
+
+    // 還原至上一步的遊戲狀態
+    fun undo(): Boolean {
+        if (previousStates.isNotEmpty()) {
+            val previousState = previousStates.removeAt(previousStates.size - 1)
+            board = previousState.board
+            score = previousState.score
+            mergeOccurred = previousState.mergeOccurred
+            return true
+        }
+        return false
+    }
+
+    // 在 Game2048 類別內部添加這個方法
+    fun copy(): Game2048 {
+        val newGame = Game2048()
+        newGame.board = this.board.map { it.clone() }.toTypedArray()  // 複製棋盤
+        newGame.score = this.score
+        newGame.bestScore = this.bestScore
+        return newGame
+    }
+
     fun isGameOver(): Boolean {
         for (i in 0 until 4) {
             for (j in 0 until 4) {
-                if (board[i][j] == 0) return false 
+                if (board[i][j] == 0) return false
             }
         }
 
         for (i in 0 until 4) {
             for (j in 0 until 4) {
-                if (i < 3 && board[i][j] == board[i + 1][j]) return false 
+                if (i < 3 && board[i][j] == board[i + 1][j]) return false
                 if (j < 3 && board[i][j] == board[i][j + 1]) return false
             }
         }
@@ -56,7 +103,7 @@ class Game2048 {
 
     private fun moveLeft() {
         for (row in board) {
-            val filtered = row.filter { it  != 0 }.toIntArray()
+            val filtered = row.filter { it != 0 }.toIntArray()
             val newRow = mergeLeft(filtered)
             for (j in 0 until 4) row[j] = if (j < newRow.size) newRow[j] else 0
         }
@@ -138,4 +185,7 @@ class Game2048 {
             board[x][y] = if ((0..9).random() < 9) 2 else 4
         }
     }
+
+    // 用來儲存遊戲狀態的資料類別
+    data class GameState(val board: Array<IntArray>, val score: Int, val mergeOccurred: Boolean)
 }

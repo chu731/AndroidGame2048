@@ -7,52 +7,49 @@
     android:background="#ded3b6"
     android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:gravity="center"
-        android:text=""
-        android:textSize="16sp" />
-
     <!-- 分數和標題並排顯示 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="1dp"
         android:gravity="center_horizontal"
-        >
+        android:layout_marginBottom="16dp">
 
         <!-- 主要遊戲標題區塊 -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="100dp"
+            android:layout_weight="1"
             android:background="@drawable/titlesnape"
             android:gravity="center"
-            android:padding="20dp"
+            android:padding="15dp"
             android:text="2048"
             android:textColor="#776E65"
-            android:textSize="40sp"
-            android:textStyle="bold" />
+            android:textSize="37sp"
+            android:textStyle="bold"
+            android:elevation="0dp"
+            android:shadowColor="#333333"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            />
 
         <!-- 分數區塊 -->
         <LinearLayout
             android:id="@+id/scoreLayout"
-            android:layout_width="150dp"
-            android:layout_height="80dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
             android:background="@drawable/snape"
-            android:padding="8dp"
-            android:layout_marginEnd="30dp"
-            >
+            android:padding="10dp"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp">
 
-            <!-- 目前分數區塊 -->
             <TextView
                 android:id="@+id/scoreLabel"
-                android:layout_width="80dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Score"
                 android:textColor="#EEE4DA"
@@ -73,12 +70,13 @@
         <!-- 最高分數區塊 -->
         <LinearLayout
             android:id="@+id/bestScoreLayout"
-            android:layout_width="150dp"
-            android:layout_height="80dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
             android:background="@drawable/snape"
-            android:padding="8dp">
+            android:padding="10dp"
+            android:layout_weight="1">
 
             <TextView
                 android:id="@+id/bestScoreLabel"
@@ -101,7 +99,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- 遊戲介紹文字和工具列並排顯示 -->
+    <!-- 遊戲介紹文字和按鈕 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -109,35 +107,56 @@
         android:gravity="center_horizontal"
         android:layout_marginBottom="16dp">
 
-    <!-- 工具列區域 -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="210dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:layout_marginTop="0dp"
-        android:background="?attr/colorPrimary"
-        android:elevation="0dp"
-        android:padding="0dp"
-        android:title="" />
+        <!-- Menu按鈕 -->
+        <android.widget.Button
+            android:id="@+id/menuButton"
+            android:layout_width="80dp"
+            android:layout_height="38dp"
+            android:text="MENU"
+            android:textSize="14sp"
+            style="@style/ButtonStyle"
+            android:layout_marginStart="90dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center"/>
+
+        <!-- 排行榜按鈕 -->
+        <android.widget.Button
+            android:id="@+id/leaderboardButton"
+            android:layout_width="80dp"
+            android:layout_height="38dp"
+            android:text="排行榜"
+            android:textSize="14sp"
+            android:layout_marginEnd="50dp"
+            style="@style/ButtonStyle"
+            android:gravity="center"/>
+
+        <android.widget.Button
+            android:id="@+id/undoButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:elevation="6dp"
+            android:background="@drawable/button_with_shadow"
+            android:gravity="center"/>
+        </LinearLayout>
 
     <!-- 遊戲介紹文字 -->
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="16dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Join the numbers and get to the 2048 tile!"
-        android:textSize="19sp" />
-    </LinearLayout>
+        android:textSize="19sp"
+        android:layout_marginBottom="16dp" />
 
     <!-- 遊戲面板 -->
     <GridLayout
         android:id="@+id/boardGridLayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:columnCount="4"
         android:rowCount="4"
         android:background="@drawable/boardsnape"
         android:padding="8dp" />
+
+
 </LinearLayout>
