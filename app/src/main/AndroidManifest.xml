@@ -12,7 +12,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Game2048">
 
-        <!-- 強制直立模式 -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
