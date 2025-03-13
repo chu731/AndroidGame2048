@@ -19,6 +19,7 @@ class Game2048(var size: Int = 4) {
     init {
         resetGame()
     }
+    
     fun addNewTile() {
         val emptyTiles = mutableListOf<Pair<Int, Int>>()
         for (i in 0 until size) {
@@ -31,6 +32,7 @@ class Game2048(var size: Int = 4) {
             board[r][c] = if (Math.random() < 0.9) 2 else 4
         }
     }
+    
     fun resetGame() {
         board = Array(size) { IntArray(size) }
         score = 0
@@ -63,7 +65,6 @@ class Game2048(var size: Int = 4) {
         return hasChanged
     }
 
-    // 儲存當前遊戲狀態
     private fun saveState() {
         previousStates.add(GameState(size, board.map { it.clone() }.toTypedArray(), score, mergeOccurred))
         if (previousStates.size > 10) {
