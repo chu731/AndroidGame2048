@@ -3,6 +3,7 @@ class Game2048(var size: Int = 4) {
     var score = 0
     var bestScore = 0
     var mergeOccurred = false
+    var isInfiniteMode: Boolean = false
     private var previousStates = mutableListOf<GameState>()
 
     fun checkFor2048(): Boolean {
@@ -93,21 +94,33 @@ class Game2048(var size: Int = 4) {
     }
 
     fun isGameOver(): Boolean {
-        for (i in 0 until size) {
-            for (j in 0 until size) {
-                if (board[i][j] == 0) return false
-            }
-        }
-
-        for (i in 0 until size) {
-            for (j in 0 until size) {
-                if (i < size - 1 && board[i][j] == board[i + 1][j]) return false
-                if (j < size - 1 && board[i][j] == board[i][j + 1]) return false
-            }
-        }
-
-        return true
+    if (isInfiniteMode) {
+        return !canMove()
     }
+    for (i in 0 until size) {
+        for (j in 0 until size) {
+            if (board[i][j] == 0) return false
+        }
+    }
+    for (i in 0 until size) {
+        for (j in 0 until size) {
+            if (i < size - 1 && board[i][j] == board[i + 1][j]) return false
+            if (j < size - 1 && board[i][j] == board[i][j + 1]) return false
+        }
+    }
+    return true
+}
+    
+    fun canMove(): Boolean {
+    for (i in 0 until size) {
+        for (j in 0 until size) {
+            if (board[i][j] == 0) return true
+            if (i < size - 1 && board[i][j] == board[i + 1][j]) return true
+            if (j < size - 1 && board[i][j] == board[i][j + 1]) return true
+        }
+    }
+    return false
+}
 
     private fun moveLeft() {
         for (row in board) {
