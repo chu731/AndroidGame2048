@@ -130,6 +130,7 @@ class MainActivity : AppCompatActivity() {
             game = Game2048(size)
             game.resetGame()
         }
+        modeTextView.text = "Mode: ${size}x${size}"
         updateUI()
     }
 
@@ -177,6 +178,7 @@ class MainActivity : AppCompatActivity() {
         gameHistory.clear() 
         undoClickCount = 0 
         updateUI()
+        modeTextView.text = "Mode: ${game.size}x${game.size}"
 
         showBoardSizeDialog()
     }
