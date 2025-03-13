@@ -110,15 +110,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showBoardSizeDialog() {
-        val options = arrayOf("3x3", "4x4", "5x5")
+        val options = arrayOf("3x3", "4x4", "5x5", "無限模式")
 
         val builder = AlertDialog.Builder(this)
         builder.setTitle("選擇遊玩模式")
         builder.setItems(options) { _, which ->
             when (which) {
                 0 -> initializeGame(3) 
-                1 -> initializeGame(4)  
+                1 -> initializeGame(4) 
                 2 -> initializeGame(5) 
+                3 -> showInfiniteModeSizeDialog()
             }
         }
         builder.show()
@@ -129,6 +130,28 @@ class MainActivity : AppCompatActivity() {
             game = Game2048(size)
             game.resetGame()
         }
+        updateUI()
+    }
+
+    private fun showInfiniteModeSizeDialog() {
+        val options = arrayOf("3x3", "4x4", "5x5")
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("選擇無限模式的格子大小")
+        builder.setItems(options) { _, which ->
+            when (which) {
+                0 -> startInfiniteMode(3)
+                1 -> startInfiniteMode(4)
+                2 -> startInfiniteMode(5)
+            }
+        }
+        builder.show()
+    }
+
+    private fun startInfiniteMode(size: Int) {
+        game = Game2048(size) 
+        game.resetGame()
+        game.isInfiniteMode = true
         updateUI()
     }
 
@@ -220,7 +243,6 @@ class MainActivity : AppCompatActivity() {
         gameHistory.add(gameState) 
     }
 
-    // 回到上一步
     private fun undoMove() {
         if (gameHistory.isNotEmpty() && undoClickCount < 4) {
             val previousGameState = gameHistory.removeAt(gameHistory.size - 1)
