@@ -1,13 +1,13 @@
-class Game2048 {
-    var board = Array(4) { IntArray(4) }
+class Game2048(var size: Int = 4) {
+    var board: Array<IntArray> = Array(size) { IntArray(size) }
     var score = 0
     var bestScore = 0
     var mergeOccurred = false
     private var previousStates = mutableListOf<GameState>()
 
     fun checkFor2048(): Boolean {
-        for (i in 0 until 4) {
-            for (j in 0 until 4) {
+        for (i in 0 until size) {
+            for (j in 0 until size) {
                 if (board[i][j] == 2048) {
                     return true
                 }
@@ -19,9 +19,20 @@ class Game2048 {
     init {
         resetGame()
     }
-
+    fun addNewTile() {
+        val emptyTiles = mutableListOf<Pair<Int, Int>>()
+        for (i in 0 until size) {
+            for (j in 0 until size) {
+                if (board[i][j] == 0) emptyTiles.add(Pair(i, j))
+            }
+        }
+        if (emptyTiles.isNotEmpty()) {
+            val (r, c) = emptyTiles.random()
+            board[r][c] = if (Math.random() < 0.9) 2 else 4
+        }
+    }
     fun resetGame() {
-        board = Array(4) { IntArray(4) }
+        board = Array(size) { IntArray(size) }
         score = 0
         addRandomTile()
         addRandomTile()
@@ -52,16 +63,18 @@ class Game2048 {
         return hasChanged
     }
 
+    // 儲存當前遊戲狀態
     private fun saveState() {
-        previousStates.add(GameState(board.map { it.clone() }.toTypedArray(), score, mergeOccurred))
+        previousStates.add(GameState(size, board.map { it.clone() }.toTypedArray(), score, mergeOccurred))
         if (previousStates.size > 10) {
-            previousStates.removeAt(0) 
+            previousStates.removeAt(0)
         }
     }
 
     fun undo(): Boolean {
         if (previousStates.isNotEmpty()) {
             val previousState = previousStates.removeAt(previousStates.size - 1)
+            size = previousState.size
             board = previousState.board
             score = previousState.score
             mergeOccurred = previousState.mergeOccurred
@@ -71,7 +84,7 @@ class Game2048 {
     }
 
     fun copy(): Game2048 {
-        val newGame = Game2048()
+        val newGame = Game2048(size)
         newGame.board = this.board.map { it.clone() }.toTypedArray()
         newGame.score = this.score
         newGame.bestScore = this.bestScore
@@ -79,16 +92,16 @@ class Game2048 {
     }
 
     fun isGameOver(): Boolean {
-        for (i in 0 until 4) {
-            for (j in 0 until 4) {
+        for (i in 0 until size) {
+            for (j in 0 until size) {
                 if (board[i][j] == 0) return false
             }
         }
 
-        for (i in 0 until 4) {
-            for (j in 0 until 4) {
-                if (i < 3 && board[i][j] == board[i + 1][j]) return false
-                if (j < 3 && board[i][j] == board[i][j + 1]) return false
+        for (i in 0 until size) {
+            for (j in 0 until size) {
+                if (i < size - 1 && board[i][j] == board[i + 1][j]) return false
+                if (j < size - 1 && board[i][j] == board[i][j + 1]) return false
             }
         }
 
@@ -99,7 +112,9 @@ class Game2048 {
         for (row in board) {
             val filtered = row.filter { it != 0 }.toIntArray()
             val newRow = mergeLeft(filtered)
-            for (j in 0 until 4) row[j] = if (j < newRow.size) newRow[j] else 0
+            for (j in 0 until size) {
+                row[j] = if (j < newRow.size) newRow[j] else 0
+            }
         }
     }
 
@@ -107,23 +122,29 @@ class Game2048 {
         for (row in board) {
             val filtered = row.filter { it != 0 }.toIntArray()
             val newRow = mergeRight(filtered)
-            for (j in 0 until 4) row[j] = if (j >= 4 - newRow.size) newRow[j - (4 - newRow.size)] else 0
+            for (j in 0 until size) {
+                row[j] = if (j >= size - newRow.size) newRow[j - (size - newRow.size)] else 0
+            }
         }
     }
 
     private fun moveUp() {
-        for (j in 0 until 4) {
-            val col = IntArray(4) { board[it][j] }.filter { it != 0 }.toIntArray()
+        for (j in 0 until size) {
+            val col = IntArray(size) { board[it][j] }.filter { it != 0 }.toIntArray()
             val newCol = mergeLeft(col)
-            for (i in 0 until 4) board[i][j] = if (i < newCol.size) newCol[i] else 0
+            for (i in 0 until size) {
+                board[i][j] = if (i < newCol.size) newCol[i] else 0
+            }
         }
     }
 
     private fun moveDown() {
-        for (j in 0 until 4) {
-            val col = IntArray(4) { board[it][j] }.filter { it != 0 }.toIntArray()
+        for (j in 0 until size) {
+            val col = IntArray(size) { board[it][j] }.filter { it != 0 }.toIntArray()
             val newCol = mergeRight(col)
-            for (i in 0 until 4) board[i][j] = if (i >= 4 - newCol.size) newCol[i - (4 - newCol.size)] else 0
+            for (i in 0 until size) {
+                board[i][j] = if (i >= size - newCol.size) newCol[i - (size - newCol.size)] else 0
+            }
         }
     }
 
@@ -169,8 +190,8 @@ class Game2048 {
 
     private fun addRandomTile() {
         val emptyCells = mutableListOf<Pair<Int, Int>>()
-        for (i in 0 until 4) {
-            for (j in 0 until 4) {
+        for (i in 0 until size) {
+            for (j in 0 until size) {
                 if (board[i][j] == 0) emptyCells.add(Pair(i, j))
             }
         }
@@ -179,6 +200,5 @@ class Game2048 {
             board[x][y] = if ((0..9).random() < 9) 2 else 4
         }
     }
-
-    data class GameState(val board: Array<IntArray>, val score: Int, val mergeOccurred: Boolean)
+    data class GameState(val size: Int, val board: Array<IntArray>, val score: Int, val mergeOccurred: Boolean)
 }
