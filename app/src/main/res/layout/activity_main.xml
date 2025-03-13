@@ -22,7 +22,7 @@
             android:gravity="center"
             android:padding="15dp"
             android:text="2048"
-            android:textColor="#776E65"
+            android:textColor="#EEEEEE"
             android:textSize="37sp"
             android:textStyle="bold"
             android:elevation="0dp"
