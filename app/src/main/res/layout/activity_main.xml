@@ -32,6 +32,24 @@
             android:shadowRadius="2"
             />
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/titlesnape"
+            android:gravity="center"
+            android:padding="15dp"
+            android:text="2048"
+            android:textColor="#776E65"
+            android:textSize="37sp"
+            android:textStyle="bold"
+            android:elevation="0dp"
+            android:shadowColor="#333333"
+            android:shadowDx="2"
+            android:shadowDy="2"
+            android:shadowRadius="2"
+            />
+
         <LinearLayout
             android:id="@+id/scoreLayout"
             android:layout_width="0dp"
