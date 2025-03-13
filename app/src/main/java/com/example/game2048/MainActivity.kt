@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.graphics.Color
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.GestureDetector
 import android.view.Menu
@@ -18,7 +19,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.*
 import java.io.File
 
@@ -37,11 +39,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         mediaPlayer = MediaPlayer.create(this, R.raw.merge_sound)
-
+        
         boardGridLayout = findViewById(R.id.boardGridLayout)
         scoreTextView = findViewById(R.id.scoreTextView)
         bestScoreTextView = findViewById(R.id.bestScoreTextView)
         game = Game2048()
+
+        showBoardSizeDialog()
 
         saveGameState()
 
@@ -58,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                     else if (diffY < -threshold) game.move("up")
                 }
                 updateUI()
-
+                
                 if (game.isGameOver()) {
                     showGameOverDialog()
                 }
@@ -76,19 +80,18 @@ class MainActivity : AppCompatActivity() {
 
         val leaderboardButton: Button = findViewById(R.id.leaderboardButton)
         leaderboardButton.setOnClickListener {
-            showLeaderboard()
+            showLeaderboard(game.size) 
         }
 
         val undoButton: Button = findViewById(R.id.undoButton)
         undoButton.setOnClickListener {
-            undoMove() 
+            undoMove()
         }
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         return event?.let { gestureDetector.onTouchEvent(it) } == true || super.onTouchEvent(event)
     }
-
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
@@ -98,6 +101,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.action_menu -> {
+
                 showGameOptionsDialog()
                 true
             }
@@ -105,7 +109,29 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // 顯示menu對話框
+    private fun showBoardSizeDialog() {
+        val options = arrayOf("3x3", "4x4", "5x5")
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("選擇遊玩模式")
+        builder.setItems(options) { _, which ->
+            when (which) {
+                0 -> initializeGame(3) 
+                1 -> initializeGame(4)  
+                2 -> initializeGame(5) 
+            }
+        }
+        builder.show()
+    }
+
+    private fun initializeGame(size: Int) {
+        if (!::game.isInitialized || game.size != size) {
+            game = Game2048(size)
+            game.resetGame()
+        }
+        updateUI()
+    }
+
     private fun showGameOptionsDialog() {
         val options = arrayOf("繼續遊戲", "重新開始", "退出遊戲")
 
@@ -115,8 +141,7 @@ class MainActivity : AppCompatActivity() {
             when (which) {
                 0 -> continueGame() 
                 1 -> restartGame() 
-                2 -> exitGame() 
-                3 -> undoMove() 
+                2 -> exitGame()
             }
         }
         builder.show()
@@ -125,11 +150,12 @@ class MainActivity : AppCompatActivity() {
     private fun continueGame() {}
 
     private fun restartGame() {
-        game.resetGame()  
-        gameHistory.clear()  
-        undoClickCount = 0  
-        updateUI() 
-        saveGameState() 
+        game.resetGame()
+        gameHistory.clear() 
+        undoClickCount = 0 
+        updateUI()
+
+        showBoardSizeDialog()
     }
 
     private fun exitGame() {
@@ -137,21 +163,28 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateUI() {
-
         scoreTextView.text = " ${game.score}"
         bestScoreTextView.text = " ${game.bestScore}"
+
         boardGridLayout.removeAllViews()
+        boardGridLayout.rowCount = game.size
+        boardGridLayout.columnCount = game.size
 
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val screenWidth = displayMetrics.widthPixels
 
-        for (i in 0 until 4) {
-            for (j in 0 until 4) {
+        val cardSize = ((screenWidth - 8 * (game.size + 1)) / game.size) * 0.9
+
+        for (i in 0 until game.size) {
+            for (j in 0 until game.size) {
                 val cardView = CardView(this)
                 cardView.layoutParams = GridLayout.LayoutParams().apply {
                     rowSpec = GridLayout.spec(i)
                     columnSpec = GridLayout.spec(j)
-                    width = 190
-                    height = 190
-                    setMargins(8, 8, 8, 8)
+                    width = cardSize.toInt()
+                    height = cardSize.toInt()
+                    setMargins(4, 4, 4, 4)
                 }
 
                 val value = game.board[i][j]
@@ -167,10 +200,8 @@ class MainActivity : AppCompatActivity() {
 
                 cardView.addView(tile)
                 boardGridLayout.addView(cardView)
-
             }
         }
-
         if (game.checkFor2048()) {
             showWinGameOverDialog()
         }
@@ -187,16 +218,19 @@ class MainActivity : AppCompatActivity() {
     private fun saveGameState() {
         val gameState = game.copy()
         gameHistory.add(gameState) 
-        Log.d("GameHistory", "Saved game state: ${gameHistory.size}")
     }
 
+    // 回到上一步
     private fun undoMove() {
         if (gameHistory.isNotEmpty() && undoClickCount < 4) {
-            game = gameHistory.removeAt(gameHistory.size - 1)
-            undoClickCount++ 
-            Log.d("Undo", "Undo move: undoClickCount = $undoClickCount")
-            updateUI()
+            val previousGameState = gameHistory.removeAt(gameHistory.size - 1)
+            val previousSize = previousGameState.size 
+            game = previousGameState 
+            game.size = previousSize 
+            undoClickCount++
+            updateUI() 
         } else {
+
             if (gameHistory.isEmpty()) {
                 Toast.makeText(this, "沒有步驟可以返回", Toast.LENGTH_SHORT).show()
             } else if (undoClickCount >= 4) {
@@ -225,8 +259,8 @@ class MainActivity : AppCompatActivity() {
         builder.setNeutralButton("儲存到排行榜") { _, _ ->
             val playerName = input.text.toString().takeIf { it.isNotBlank() } ?: "Player"
             Log.d("Game", "Saving score for player: $playerName with score: ${game.score}")
-            addToLeaderboard(playerName, game.score)
-            showLeaderboard()
+            addToLeaderboard(playerName, game.score, game.size)
+            showLeaderboard(game.size)
 
             game.resetGame()
             updateUI()
@@ -245,14 +279,14 @@ class MainActivity : AppCompatActivity() {
         builder.setView(input) 
 
         builder.setPositiveButton("重新開始") { _, _ ->
-            restartGame()
+            restartGame() 
         }
 
         builder.setNeutralButton("儲存到排行榜") { _, _ ->
-            val playerName = input.text.toString().takeIf { it.isNotBlank() } ?: "Player" 
+            val playerName = input.text.toString().takeIf { it.isNotBlank() } ?: "Player"
             Log.d("Game", "Saving score for player: $playerName with score: ${game.score}")
-            addToLeaderboard(playerName, game.score)
-            showLeaderboard() 
+            addToLeaderboard(playerName, game.score, game.size)
+            showLeaderboard(game.size)
         }
 
         builder.setNegativeButton("退出") { _, _ ->
@@ -262,9 +296,6 @@ class MainActivity : AppCompatActivity() {
         builder.setCancelable(false)
         builder.show()
     }
-
-
-
 
     private fun getTileColor(value: Int): Int {
         return when (value) {
@@ -284,61 +315,69 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Serializable
-    data class Player(val name: String, val score: Int) {
-        companion object {
-        }
-    }
+    data class Player(val name: String, val score: Int)
 
     @Serializable
-    data class Leaderboard(var players: MutableList<Player>)
+    data class Leaderboard(var players: MutableList<Player> = mutableListOf())
 
-    fun loadLeaderboard(): Leaderboard {
-        val file = File(filesDir, "leaderboard.json")
+    @Serializable
+    data class AllLeaderboards(val leaderboards: MutableMap<Int, Leaderboard> = mutableMapOf())
+
+    fun loadLeaderboard(): AllLeaderboards {
+        val file = File(filesDir, "leaderboards.json")
         return try {
             if (file.exists()) {
                 val jsonString = file.readText()
                 Json.decodeFromString(jsonString)
             } else {
-                Leaderboard(mutableListOf())
+                AllLeaderboards()
             }
         } catch (e: Exception) {
             Log.e("Leaderboard", "Error loading leaderboard: ${e.message}")
-            Leaderboard(mutableListOf())
+            AllLeaderboards()
         }
     }
 
-    fun saveLeaderboard(leaderboard: Leaderboard) {
+    fun saveLeaderboard(allLeaderboards: AllLeaderboards) {
         try {
-            val jsonString = Json.encodeToString(leaderboard)
-            val file = File(filesDir, "leaderboard.json")
-
+            val jsonString = Json.encodeToString(allLeaderboards)
+            val file = File(filesDir, "leaderboards.json")
             file.writeText(jsonString)
-
             Log.d("Leaderboard", "Leaderboard saved: $jsonString")
         } catch (e: Exception) {
             Log.e("Leaderboard", "Error saving leaderboard: ${e.message}")
         }
     }
 
-    private fun addToLeaderboard(playerName: String, score: Int) {
-        val leaderboard = loadLeaderboard() 
+    private fun addToLeaderboard(playerName: String, score: Int, size: Int) {
+        val allLeaderboards = loadLeaderboard()
+
+        if (!allLeaderboards.leaderboards.containsKey(size)) {
+            allLeaderboards.leaderboards[size] = Leaderboard()
+        }
+
+        val leaderboard = allLeaderboards.leaderboards[size]!!
         leaderboard.players.add(Player(playerName, score))
         leaderboard.players.sortByDescending { it.score }
+
         if (leaderboard.players.size > 10) {
             leaderboard.players = leaderboard.players.take(10).toMutableList()
         }
 
-        saveLeaderboard(leaderboard)
+        saveLeaderboard(allLeaderboards)
     }
-    fun showLeaderboard() {
-        val leaderboard = loadLeaderboard()
-        val builder = StringBuilder("=== 排行榜 ===\n")
-        leaderboard.players.forEachIndexed { index, player ->
+
+    fun showLeaderboard(size: Int) {
+        val allLeaderboards = loadLeaderboard()
+        val leaderboard = allLeaderboards.leaderboards[size]
+
+        val builder = StringBuilder("=== ${size}x${size} 排行榜 ===\n")
+        leaderboard?.players?.forEachIndexed { index, player ->
             builder.append("${index + 1}. ${player.name} - ${player.score}\n")
         }
 
         AlertDialog.Builder(this)
-            .setTitle("排行榜")
+            .setTitle("${size}x${size} 排行榜")
             .setMessage(builder.toString())
             .setPositiveButton("確定", null)
             .show()
