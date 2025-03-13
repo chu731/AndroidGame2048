@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
         scoreTextView = findViewById(R.id.scoreTextView)
         bestScoreTextView = findViewById(R.id.bestScoreTextView)
         game = Game2048()
+        modeTextView = findViewById(R.id.modeTextView)
 
         showBoardSizeDialog()
 
