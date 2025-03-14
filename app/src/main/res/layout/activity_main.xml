@@ -119,8 +119,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_horizontal"
+        android:gravity="start"
         android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/modeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="start"
+            android:text="Mode: 4x4"
+            android:maxWidth="60dp"
+            android:layout_weight="1"
+            android:textColor="#776E65"
+            android:textSize="20sp"
+            android:autoSizeTextType="uniform"
+            android:textStyle="italic"/>
 
         <android.widget.Button
             android:id="@+id/menuButton"
@@ -129,7 +142,7 @@
             android:text="MENU"
             android:textSize="14sp"
             style="@style/ButtonStyle"
-            android:layout_marginStart="90dp"
+            android:layout_marginStart="40dp"
             android:layout_marginEnd="16dp"
             android:gravity="center"/>
 
@@ -139,10 +152,10 @@
             android:layout_height="38dp"
             android:text="排行榜"
             android:textSize="14sp"
-            android:layout_marginEnd="50dp"
+            android:layout_marginEnd="20dp"
             style="@style/ButtonStyle"
             android:gravity="center"/>
-
+        
         <android.widget.Button
             android:id="@+id/undoButton"
             android:layout_width="50dp"
