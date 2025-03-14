@@ -7,6 +7,8 @@ class Game2048(var size: Int = 4) {
     private var previousStates = mutableListOf<GameState>()
 
     fun checkFor2048(): Boolean {
+        if (isInfiniteMode) return false
+        
         for (i in 0 until size) {
             for (j in 0 until size) {
                 if (board[i][j] == 2048) {
