@@ -128,11 +128,13 @@
             android:layout_height="match_parent"
             android:gravity="start"
             android:text="Mode: 4x4"
-            android:maxWidth="60dp"
+            android:maxWidth="40dp"
             android:layout_weight="1"
             android:textColor="#776E65"
-            android:textSize="20sp"
             android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="10sp"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeStepGranularity="1sp"
             android:textStyle="italic"/>
 
         <android.widget.Button
