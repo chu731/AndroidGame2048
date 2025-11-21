@@ -1,4 +1,3 @@
-<img width="1465" height="819" alt="image" src="https://github.com/user-attachments/assets/7fc02910-ebb1-41b5-ac9c-4a0759d6d96f" />
 # 2048 Game  
 這是一款用 Kotlin 開發的 2048 遊戲，具備基本的遊戲邏輯與用戶界面。  
 目標是合併數字方塊，創造出 2048，並獲得最高分數。  
